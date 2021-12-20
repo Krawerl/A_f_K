@@ -1,0 +1,81 @@
+---
+  - name: Install virtualenv
+    apt:
+      name: virtualenv
+      state: present
+
+  - name: Install python-dev
+    apt:
+      name: python-dev
+      state: present
+  
+  - name: Install libffi-dev
+    apt:
+      name: libffi-dev
+      state: present
+   
+  - name: Install build-essential
+    apt:
+      name: build-essential
+      state: present
+   
+  - name: Install libncurses-dev
+    apt:
+      name: libncurses-dev
+      state: present
+   
+  - name: Install libusb-dev
+    apt:
+      name: libusb-dev
+      state: present
+   
+  - name: Install avrdude
+    apt:
+      name: avrdude
+      state: present
+   
+  - name: Install gcc-avr
+    apt:
+      name: gcc-avr
+      state: present
+   
+  - name: Install binutils-avr
+    apt:
+      name: binutils-avr
+      state: present
+       
+  - name: Install avr-libc
+    apt:
+      name: avr-libc
+      state: present
+       
+  - name: Install stm32flash
+    apt:
+      name: stm32flash
+      state: present
+       
+  - name: Install dfu-util
+    apt:
+      name: dfu-util
+      state: present
+       
+  - name: Install libnewlib-arm-none-eabi
+    apt:
+      name: libnewlib-arm-none-eabi
+      state: present
+       
+  - name: Install gcc-arm-none-eabi
+    apt:
+      name: gcc-arm-none-eabi
+      state: present
+       
+  - name: Install binutils-arm-none-eabi
+    apt:
+      name: binutils-arm-none-eabi
+      state: present
+       
+  - name: Install libusb-1.0-0
+    apt:
+      name: libusb-1.0-0
+      
+      state: present
