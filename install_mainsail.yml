@@ -10,18 +10,21 @@
       src: files/nginx_config/mainsail.j2
       dest: /etc/nginx/sites-available/mainsail
       force: yes
+    become: yes
       
   - name: copy common_vars.conf file
     ansible.builtin.copy:
       src: files/nginx_config/common_vars.conf
       dest: /etc/nginx/conf.d/common_vars.conf
       force: yes
+    become: yes
       
   - name: copy upstreams.conf file
     ansible.builtin.copy:
       src: files/nginx_config/upstreams.conf
       dest: /etc/nginx/conf.d/upstreams.conf
       force: yes
+    become: yes
     
   - name: make mainsail dir rm
     ansible.builtin.file:

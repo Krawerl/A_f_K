@@ -17,6 +17,9 @@
     import_tasks: install_kiauh.yml
     when: main.KIAUH == true
 
+  - name: get mjpg-streamer dependencies
+    import_tasks: dependencies/mjpg-streamer.yml
+
   - name: install mjpg-streamer
     import_tasks: install_mjpg-streamer.yml
     when: main.KIAUH == true

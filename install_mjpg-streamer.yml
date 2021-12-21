@@ -4,6 +4,7 @@
       name: webcamd
       state: stopped
     become: yes
+    ignore_errors: yes
 
   - name: rm mjpg-streamer
     ansible.builtin.file:
@@ -45,6 +46,7 @@
     ansible.builtin.copy:
       src:  /home/{{ansible_user}}/mjpg-streamer/webcamd
       dest: /usr/local/bin/webcamd
+      mode: '0777'
       remote_src: yes
       force: yes
     become: yes
