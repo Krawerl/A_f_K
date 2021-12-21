@@ -1,13 +1,20 @@
 
 Ansible script to install/update Klipper-Moonraker-Mainsail on multiple pi's
 
+Compatible with [kiauh](https://github.com/th33xitus/kiauh)
+
 TODO
+
 ~Doc
+
 ~Klipper config/make/flash
+
 ~mjpg-streamer support
+
 ~multiinstance support
 
-Quick start
+Quick Start
+
 Install ansible (ex.: sudo apt-get install ansible), Download the script
 create your inventory (hosts) file https://docs.ansible.com/ansible/latest/network/getting_started/first_inventory.html
 you have to set "ansible_user=pi" (ini-format) in the hosts file for every host
