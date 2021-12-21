@@ -1,0 +1,4 @@
+
+[3d_print_pis]
+192.168.0.150 ansible_user=pi
+192.168.0.151 ansible_user=pi
