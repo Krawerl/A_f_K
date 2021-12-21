@@ -1,5 +1,5 @@
 ---
-- hosts: 3d_print_pis
+- hosts: all
   become: yes
   tasks:
       
