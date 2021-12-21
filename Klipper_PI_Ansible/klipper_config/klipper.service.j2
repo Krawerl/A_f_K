@@ -15,6 +15,6 @@ WantedBy=multi-user.target
 Type=simple
 User=pi
 RemainAfterExit=yes
-ExecStart= /home/{{ansible_user}}/klippy-env/bin/python /home/{{ansible_user}}/klipper/klippy/klippy.py /home/pi/klipper_config/printer.cfg -I /tmp/printer -l /home/pi/klipper_logs/klippy.log -a /tmp/klippy_uds
+ExecStart= /home/{{ansible_user}}/klippy-env/bin/python /home/{{ansible_user}}/klipper/klippy/klippy.py /home/{{ansible_user}}/klipper_config/printer.cfg -I /tmp/printer -l /home/{{ansible_user}}/klipper_logs/klippy.log -a /tmp/klippy_uds
 Restart=always
 RestartSec=10

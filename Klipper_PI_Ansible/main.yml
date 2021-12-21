@@ -113,7 +113,7 @@
 
   - name: chown pi
     ansible.builtin.shell:
-      cmd: chown -R pi:pi *
+      cmd: chown -R pi:pi * /home/{{ansible_user}}/moonraker*Start123456
       chdir: /home/{{ansible_user}}/
   
   - name: copy moonraker.service
@@ -180,10 +180,10 @@
       path: /etc/nginx/sites-enabled/default
       state: absent
       
-  - name: chown pi
+  - name: chown {{ansible_user}}
     ansible.builtin.shell:
-      cmd: chown -R pi:pi *
-      chdir: /home/{{ansible_user}}/
+      cmd: chown -R {{ansible_user}}:{{ansible_user}} /home/{{ansible_user}}/mainsail
+      chdir: /home/{{ansible_user}}
       
   - name: create symlink mainsail site enable
     ansible.builtin.file:
