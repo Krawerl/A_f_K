@@ -1,5 +1,5 @@
 # ansklipsail
-Ansible script to install/update Klipper-Moonraker-Mainsail 
+Ansible script to install/update Klipper-Moonraker-Mainsail on multiple pi's
 
 TODO
 -Doc
