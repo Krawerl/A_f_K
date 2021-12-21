@@ -1,0 +1,5 @@
+---
+  - name: install kiauh (git clone)
+    ansible.builtin.git:
+      repo: 'https://github.com/th33xitus/kiauh.git'
+      dest: /home/{{ansible_user}}/kiauh

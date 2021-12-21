@@ -1,0 +1,76 @@
+---
+  - name: stop webcamd.service
+    ansible.builtin.systemd:
+      name: webcamd
+      state: stopped
+    become: yes
+
+  - name: rm mjpg-streamer
+    ansible.builtin.file:
+      path: /home/{{ansible_user}}/mjpg-streamer
+      state: absent
+
+  - name: git checkout mjpg-streamer
+    ansible.builtin.git:
+      repo: 'https://github.com/jacksonliam/mjpg-streamer.git'
+      dest: /home/{{ansible_user}}/mjpg-streamer
+      
+  - name: making  mjpg-streamer
+    community.general.make:
+      chdir: /home/{{ansible_user}}/mjpg-streamer/mjpg-streamer-experimental
+           
+  - name: copy files from experimental
+    ansible.builtin.shell:
+      cmd: mv /home/{{ansible_user}}/mjpg-streamer/mjpg-streamer-experimental/* /home/{{ansible_user}}/mjpg-streamer/
+      chdir: /home/{{ansible_user}}
+      
+  - name: mkdir www-mjpgstreamer
+    ansible.builtin.file:
+      path: /home/{{ansible_user}}/mjpg-streamer/www-mjpgstreamer
+      state: directory
+
+  - name: copy index.html
+    ansible.builtin.copy:
+      src:  files/mjpg-streamer_config/index.html
+      dest: /home/{{ansible_user}}/mjpg-streamer/www-mjpgstreamer/index.html
+      force: no
+      
+  - name: download webcamd for mjpg-streamer
+    get_url:
+      url: https://raw.githubusercontent.com/mainsail-crew/MainsailOS/master/src/modules/mjpgstreamer/filesystem/root/usr/local/bin/webcamd
+      dest: /home/{{ansible_user}}/mjpg-streamer
+      mode: '0777'
+
+  - name: copy webcamd to /usr/local/bin
+    ansible.builtin.copy:
+      src:  /home/{{ansible_user}}/mjpg-streamer/webcamd
+      dest: /usr/local/bin/webcamd
+      remote_src: yes
+      force: yes
+    become: yes
+    
+  - name: rm webcamd mjpg-streamer
+    ansible.builtin.file:
+      path: /home/{{ansible_user}}/mjpg-streamer/webcamd
+      state: absent
+
+  - name: download webcam.txt (if not exist)
+    get_url:
+      url: https://raw.githubusercontent.com/mainsail-crew/MainsailOS/master/src/modules/mjpgstreamer/filesystem/home/pi/klipper_config/webcam.txt
+      dest: /home/{{ansible_user}}/klipper_config/webcam.txt
+      force: no
+      
+  - name: copy webcamd.service
+    ansible.builtin.template:
+      src: files/mjpg-streamer_config/webcamd.service.j2
+      dest: /etc/systemd/system/webcamd.service
+      force: yes
+    become: yes
+    
+  - name: start webcamd.service
+    ansible.builtin.systemd:
+      name: webcamd
+      state: started
+      daemon_reload: yes
+    become: yes
+    

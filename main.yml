@@ -1,197 +1,40 @@
 ---
 - hosts: 3d_print_pis
-  become: yes
   tasks:
-      
+
+  - name: read variables from main_conf
+    include_vars:
+      file: conf/main_conf.yml
+      name: main
+
   - name: Update all packages to their latest version
     apt:
       name: "*"
       state: latest
+    become: yes
+
+  - name: install kiauh
+    import_tasks: install_kiauh.yml
+    when: main.KIAUH == true
+
+  - name: install mjpg-streamer
+    import_tasks: install_mjpg-streamer.yml
+    when: main.KIAUH == true
 
   - name: get klipper dependencies
     import_tasks: dependencies/klipper.yml
       
-  - name: git checkout klipper
-    ansible.builtin.git:
-      repo: 'https://github.com/Klipper3d/klipper.git'
-      dest: /home/{{ansible_user}}/klipper
-
-  - name: rm klippy-env
-    ansible.builtin.file:
-      path: /home/{{ansible_user}}/klippy-env
-      state: absent
-
-  - name: building env for klippy
-    ansible.builtin.shell:
-      cmd: virtualenv -p python2 ./klippy-env
-      chdir: /home/{{ansible_user}}
-      
-  - name: installing klippy
-    ansible.builtin.shell:
-      cmd: ./klippy-env/bin/pip install -r ./klipper/scripts/klippy-requirements.txt
-      chdir: /home/{{ansible_user}}/
-      
-  - name: mkdir klipper_config
-    ansible.builtin.file:
-      path: /home/{{ansible_user}}/klipper_config
-      state: directory 
-
-  - name: mkdir klipper_logs
-    ansible.builtin.file:
-      path: /home/{{ansible_user}}/klipper_logs
-      state: directory 
-      
-  - name: mkdir gcode_files
-    ansible.builtin.file:
-      path: /home/{{ansible_user}}/gcode_files
-      state: directory 
-
-  - name: touch printer.cfg
-    ansible.builtin.file:
-      path: /home/{{ansible_user}}/klipper_config/printer.cfg
-      state: touch
-      mode: u=rw,g=r,o=r
-
-  - name: chown {{ansible_user}}
-    ansible.builtin.shell:
-      cmd: chown -R {{ansible_user}}:{{ansible_user}} /home/{{ansible_user}}/klipper/ /home/{{ansible_user}}/klippy-env
-      chdir: /home/{{ansible_user}}/
-
-  - name: copy klipper.service
-    ansible.builtin.template:
-#    ansible.builtin.copy:
-      src: klipper_config/klipper.service.j2
-      dest: /etc/systemd/system/klipper.service
-      force: yes
-      
-  - name: start klipper.service
-    ansible.builtin.systemd:
-      name: klipper
-      state: restarted
-      daemon_reload: yes
-
-# install mjpg-streamer
-# install macros
-# compile klipper - loop over configs
-#   - smoothieboard klipper
-#     > copy klipper.bin to boot and rename it to firmware.bin
-#   - linux process klipper flash
-      
+  - name: installing klipper
+    import_tasks: install_klipper.yml
+    
   - name: get moonraker dependencies
     import_tasks: dependencies/moonraker.yml
-      
-  - name: git checkout moonraker
-    ansible.builtin.git:
-      repo: 'https://github.com/Arksine/moonraker.git'
-      dest: /home/{{ansible_user}}/moonraker
-
-  - name: rm moonraker-env
-    ansible.builtin.file:
-      path: /home/{{ansible_user}}/moonraker-env
-      state: absent
- 
-  - name: building env for moonraker
-    ansible.builtin.shell:
-      cmd: virtualenv -p python3 ./moonraker-env
-      chdir: /home/{{ansible_user}}
-      
-  - name: create symlink python3
-    ansible.builtin.shell:
-      cmd: ln -s /usr/lib/python3/dist-packages/gpiod* /home/{{ansible_user}}/moonraker-env/lib/python*/site-packages
-      chdir: /home/{{ansible_user}}/
- 
+    
   - name: installing moonraker
-    ansible.builtin.shell:
-      cmd: ./moonraker-env/bin/pip install -r ./moonraker/scripts/moonraker-requirements.txt
-      chdir: /home/{{ansible_user}}/
-  
-  - name: copy moonraker.conf (if not exist)
-    ansible.builtin.copy:
-      src: moonraker_config/moonraker.conf
-      dest: /home/{{ansible_user}}/klipper_config/moonraker.conf
-      force: no
-
-  - name: chown {{ansible_user}}
-    ansible.builtin.shell:
-      cmd: chown -R {{ansible_user}}:{{ansible_user}} /home/{{ansible_user}}/moonraker*
-      chdir: /home/{{ansible_user}}/
-  
-  - name: copy moonraker.service
-    ansible.builtin.template:
-      src: moonraker_config/moonraker.service.j2
-      dest: /etc/systemd/system/moonraker.service
-      force: yes
-      
-  - name: start moonraker.service
-    ansible.builtin.systemd:
-      name: moonraker
-      state: restarted
-      daemon_reload: yes
+    import_tasks: install_moonraker.yml
       
   - name: get mainsail dependencies
     import_tasks: dependencies/mainsail.yml
     
-  - name: copy mainsail file (if not exist)
-    ansible.builtin.copy:
-      src: nginx_config/mainsail
-      dest: /etc/nginx/sites-available/mainsail
-      force: no
-      
-  - name: copy common_vars.conf file (if not exist)
-    ansible.builtin.copy:
-      src: nginx_config/common_vars.conf
-      dest: /etc/nginx/conf.d/common_vars.conf
-      force: no
-      
-  - name: copy upstreams.conf file (if not exist)
-    ansible.builtin.copy:
-      src: nginx_config/upstreams.conf
-      dest: /etc/nginx/conf.d/upstreams.conf
-      force: no
-    
-  - name: make mainsail dir rm
-    ansible.builtin.file:
-      path: /home/{{ansible_user}}/mainsail
-      state: absent
-   
-  - name: remake mainsail dir
-    ansible.builtin.file:
-      path: /home/{{ansible_user}}/mainsail
-      state: directory   
-      
-  - name: git get latest mainsail release
-    ansible.builtin.shell:
-      cmd: wget $(curl -s https://api.github.com/repos/mainsail-crew/mainsail/releases | grep browser_download_url | cut -d'"' -f4 | head -1)
-      chdir: /home/{{ansible_user}}/mainsail
-  
-  - name: unzip mainsail
-    ansible.builtin.unarchive:
-      src: /home/{{ansible_user}}/mainsail/mainsail.zip
-      dest: /home/{{ansible_user}}/mainsail
-      remote_src: yes
-
-  - name: Remove file mainsail.zip
-    ansible.builtin.file:
-      path: /home/{{ansible_user}}/mainsail/mainsail.zip
-      state: absent
-  
-  - name: Remove file default
-    ansible.builtin.file:
-      path: /etc/nginx/sites-enabled/default
-      state: absent
-      
-  - name: chown {{ansible_user}}
-    ansible.builtin.shell:
-      cmd: chown -R {{ansible_user}}:{{ansible_user}} /home/{{ansible_user}}/mainsail
-      chdir: /home/{{ansible_user}}
-      
-  - name: create symlink mainsail site enable
-    ansible.builtin.file:
-      src: /etc/nginx/sites-available/mainsail
-      dest: /etc/nginx/sites-enabled/mainsail
-      state: link
-      
-  - name: Restart service nginx
-    ansible.builtin.service:
-      name: nginx
-      state: restarted
+  - name: installing mainsail
+    import_tasks: install_mainsail.yml

@@ -1,0 +1,69 @@
+---
+  - name: stop service nginx
+    ansible.builtin.service:
+      name: nginx
+      state: stopped
+    become: yes
+
+  - name: copy mainsail file
+    ansible.builtin.template:
+      src: files/nginx_config/mainsail.j2
+      dest: /etc/nginx/sites-available/mainsail
+      force: yes
+      
+  - name: copy common_vars.conf file
+    ansible.builtin.copy:
+      src: files/nginx_config/common_vars.conf
+      dest: /etc/nginx/conf.d/common_vars.conf
+      force: yes
+      
+  - name: copy upstreams.conf file
+    ansible.builtin.copy:
+      src: files/nginx_config/upstreams.conf
+      dest: /etc/nginx/conf.d/upstreams.conf
+      force: yes
+    
+  - name: make mainsail dir rm
+    ansible.builtin.file:
+      path: /home/{{ansible_user}}/mainsail
+      state: absent
+   
+  - name: remake mainsail dir
+    ansible.builtin.file:
+      path: /home/{{ansible_user}}/mainsail
+      state: directory   
+      
+  - name: git get latest mainsail release
+    ansible.builtin.shell:
+      cmd: wget $(curl -s https://api.github.com/repos/mainsail-crew/mainsail/releases | grep browser_download_url | cut -d'"' -f4 | head -1)
+      chdir: /home/{{ansible_user}}/mainsail
+  
+  - name: unzip mainsail
+    ansible.builtin.unarchive:
+      src: /home/{{ansible_user}}/mainsail/mainsail.zip
+      dest: /home/{{ansible_user}}/mainsail
+      remote_src: yes
+
+  - name: Remove file mainsail.zip
+    ansible.builtin.file:
+      path: /home/{{ansible_user}}/mainsail/mainsail.zip
+      state: absent
+  
+  - name: Remove file default
+    ansible.builtin.file:
+      path: /etc/nginx/sites-enabled/default
+      state: absent
+    become: yes
+      
+  - name: create symlink mainsail site enable
+    ansible.builtin.file:
+      src: /etc/nginx/sites-available/mainsail
+      dest: /etc/nginx/sites-enabled/mainsail
+      state: link
+    become: yes
+      
+  - name: Restart service nginx
+    ansible.builtin.service:
+      name: nginx
+      state: restarted
+    become: yes

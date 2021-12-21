@@ -1,0 +1,61 @@
+---
+  - name: stop klipper.service
+    ansible.builtin.systemd:
+      name: klipper
+      state: stopped
+    become: yes
+
+  - name: git checkout klipper
+    ansible.builtin.git:
+      repo: 'https://github.com/Klipper3d/klipper.git'
+      dest: /home/{{ansible_user}}/klipper
+
+  - name: rm klippy-env
+    ansible.builtin.file:
+      path: /home/{{ansible_user}}/klippy-env
+      state: absent
+
+  - name: building env for klippy
+    ansible.builtin.shell:
+      cmd: virtualenv -p python2 ./klippy-env
+      chdir: /home/{{ansible_user}}
+      
+  - name: installing klippy
+    ansible.builtin.shell:
+      cmd: ./klippy-env/bin/pip install -r ./klipper/scripts/klippy-requirements.txt
+      chdir: /home/{{ansible_user}}
+      
+  - name: mkdir klipper_config
+    ansible.builtin.file:
+      path: /home/{{ansible_user}}/klipper_config
+      state: directory 
+
+  - name: mkdir klipper_logs
+    ansible.builtin.file:
+      path: /home/{{ansible_user}}/klipper_logs
+      state: directory 
+      
+  - name: mkdir gcode_files
+    ansible.builtin.file:
+      path: /home/{{ansible_user}}/gcode_files
+      state: directory 
+
+  - name: touch printer.cfg
+    ansible.builtin.file:
+      path: /home/{{ansible_user}}/klipper_config/printer.cfg
+      state: touch
+      mode: u=rw,g=r,o=r
+
+  - name: copy klipper.service
+    ansible.builtin.template:
+      src: files/klipper_config/klipper.service.j2
+      dest: /etc/systemd/system/klipper.service
+      force: yes
+    become: yes
+      
+  - name: start klipper.service
+    ansible.builtin.systemd:
+      name: klipper
+      state: restarted
+      daemon_reload: yes
+    become: yes

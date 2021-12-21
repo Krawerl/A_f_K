@@ -1,0 +1,51 @@
+---
+  - name: stop moonraker.service
+    ansible.builtin.systemd:
+      name: moonraker
+      state: stopped
+    become: yes
+
+  - name: git checkout moonraker
+    ansible.builtin.git:
+      repo: 'https://github.com/Arksine/moonraker.git'
+      dest: /home/{{ansible_user}}/moonraker
+
+  - name: rm moonraker-env
+    ansible.builtin.file:
+      path: /home/{{ansible_user}}/moonraker-env
+      state: absent
+ 
+  - name: building env for moonraker
+    ansible.builtin.shell:
+      cmd: virtualenv -p python3 ./moonraker-env
+      chdir: /home/{{ansible_user}}
+      
+  - name: create symlink python3
+    ansible.builtin.shell:
+      cmd: ln -s /usr/lib/python3/dist-packages/gpiod* /home/{{ansible_user}}/moonraker-env/lib/python*/site-packages
+      chdir: /home/{{ansible_user}}
+ 
+  - name: installing moonraker
+    ansible.builtin.shell:
+      cmd: ./moonraker-env/bin/pip install -r ./moonraker/scripts/moonraker-requirements.txt
+      chdir: /home/{{ansible_user}}
+  
+  - name: copy moonraker.conf (if not exist)
+    ansible.builtin.copy:
+      src: files/moonraker_config/moonraker.conf
+      dest: /home/{{ansible_user}}/klipper_config/moonraker.conf
+      force: no
+
+  - name: copy moonraker.service
+    ansible.builtin.template:
+      src: files/moonraker_config/moonraker.service.j2
+      dest: /etc/systemd/system/moonraker.service
+      force: yes
+    become: yes
+      
+  - name: start moonraker.service
+    ansible.builtin.systemd:
+      name: moonraker
+      state: restarted
+      daemon_reload: yes
+    become: yes

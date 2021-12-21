@@ -1,0 +1,12 @@
+
+# Install KIAUH?
+KIAUH: true
+
+# mjpg-streamer
+   # if (true):  install / reinstall
+MJPG_STREAMER: true
+
+# Multi Instances - not yet supported!
+   # if (true):  recursive search INSTANCES folder
+   #    (false): standard single instance installation
+MULTI_KLIPPER: false
