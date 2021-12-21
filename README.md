@@ -11,7 +11,7 @@ TODO
 
 ~mjpg-streamer support
 
-~multiinstance support
+~multi instance support
 
 Quick Start
 
