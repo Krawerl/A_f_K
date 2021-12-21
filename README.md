@@ -1,7 +1,8 @@
 
-Ansible_for_Klipper
+**Ansible_for_Klipper**
+*Ansible script to install/update Klipper-Moonraker-Mainsail-(KIAUH) on multiple pi's*
 
-Ansible script to install/update Klipper-Moonraker-Mainsail on multiple pi's
+Basic Idea: configure once and keep your klipper systems up to date with one command or a cron job
 
 Compatible with [kiauh](https://github.com/th33xitus/kiauh)
 
@@ -9,9 +10,7 @@ TODO
 
 ~Doc
 
-~Klipper config/make/flash
-
-~mjpg-streamer support
+~Klipper make/flash
 
 ~multi instance support
 
