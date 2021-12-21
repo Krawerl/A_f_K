@@ -1,12 +1,13 @@
 
 **Ansible_for_Klipper**
+
 *Ansible script to install/update Klipper-Moonraker-Mainsail-(KIAUH) on multiple pi's*
 
 Basic Idea: configure once and keep your klipper systems up to date with one command or a cron job
 
 Compatible with [kiauh](https://github.com/th33xitus/kiauh)
 
-TODO
+**TODO**
 
 ~Doc
 
@@ -14,7 +15,7 @@ TODO
 
 ~multi instance support
 
-Quick Start
+**Quick Start**
 
 Install ansible (ex.: sudo apt-get install ansible), Download the script
 create your inventory (hosts) file https://docs.ansible.com/ansible/latest/network/getting_started/first_inventory.html
