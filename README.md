@@ -8,12 +8,10 @@ Basic Idea: configure once and keep your klipper systems up to date with one com
 Compatible with [kiauh](https://github.com/th33xitus/kiauh)
 
 **TODO**
+- Doc
+- multi instance support
+	- Klipper make/flash
 
-~Doc
-
-~Klipper make/flash
-
-~multi instance support
 
 **Quick Start**
 
