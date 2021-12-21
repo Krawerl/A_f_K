@@ -52,9 +52,9 @@
       state: touch
       mode: u=rw,g=r,o=r
 
-  - name: chown pi
+  - name: chown {{ansible_user}}
     ansible.builtin.shell:
-      cmd: chown -R pi:pi *
+      cmd: chown -R {{ansible_user}}:{{ansible_user}} /home/{{ansible_user}}/klipper/ /home/{{ansible_user}}/klippy-env
       chdir: /home/{{ansible_user}}/
 
   - name: copy klipper.service
@@ -111,9 +111,9 @@
       dest: /home/{{ansible_user}}/klipper_config/moonraker.conf
       force: no
 
-  - name: chown pi
+  - name: chown {{ansible_user}}
     ansible.builtin.shell:
-      cmd: chown -R pi:pi * /home/{{ansible_user}}/moonraker*Start123456
+      cmd: chown -R {{ansible_user}}:{{ansible_user}} /home/{{ansible_user}}/moonraker*
       chdir: /home/{{ansible_user}}/
   
   - name: copy moonraker.service
