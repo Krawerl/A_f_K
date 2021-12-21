@@ -1,0 +1,17 @@
+
+# compile board firmware
+   # if (true): config.board must be in directory firmware
+COMPILE_BOARD_FIRMWARE: true
+
+# compile linux process mcu
+   # if (true): config.linux must be in directory firmware
+COMPILE_LINUX_MCU: true
+
+# flash board (compile must be true)
+   # if (true): flash
+   #    (path): flash over sd-card
+FLASH_BOARD_FIRMWARE: "/dev/serial/by-id/usb-Klipper_lpc1769_08E0FF0CA8943BAFD2BC685CC02000F5-if00"
+
+# flashes linux process mcu (compile must be true)
+   # if (true): flash to /tmp/klipper_host_mcu
+FLASH_LINUX_MCU: true
