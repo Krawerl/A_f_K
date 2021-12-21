@@ -1,6 +1,6 @@
 ---
-   - name: Install nginx
+   - name: install mainsail dependencies
      apt:
-       name: nginx
-       state: present
+       pkg:
+       - nginx
      become: yes
