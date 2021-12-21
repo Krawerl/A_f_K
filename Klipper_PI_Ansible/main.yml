@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: 3d_print_pis
   become: yes
   tasks:
       
@@ -57,11 +57,12 @@
       cmd: chown -R pi:pi *
       chdir: /home/{{ansible_user}}/
 
-  - name: copy klipper.service (if not exist)
-    ansible.builtin.copy:
-      src: klipper_config/klipper.service
+  - name: copy klipper.service
+    ansible.builtin.template:
+#    ansible.builtin.copy:
+      src: klipper_config/klipper.service.j2
       dest: /etc/systemd/system/klipper.service
-      force: no
+      force: yes
       
   - name: start klipper.service
     ansible.builtin.systemd:
@@ -115,11 +116,11 @@
       cmd: chown -R pi:pi *
       chdir: /home/{{ansible_user}}/
   
-  - name: copy moonraker.service (if not exist)
-    ansible.builtin.copy:
-      src: moonraker_config/moonraker.service
+  - name: copy moonraker.service
+    ansible.builtin.template:
+      src: moonraker_config/moonraker.service.j2
       dest: /etc/systemd/system/moonraker.service
-      force: no
+      force: yes
       
   - name: start moonraker.service
     ansible.builtin.systemd:

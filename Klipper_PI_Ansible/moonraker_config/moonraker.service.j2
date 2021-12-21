@@ -9,11 +9,9 @@ After=network.target klipper.service
 WantedBy=multi-user.target
 
 [Service]
-Environment=MOONRAKER_CONFIG=/home/pi/klipper_config/moonraker.conf
-Environment=MOONRAKER_LOG=/home/pi/klipper_logs/moonraker.log
 Type=simple
 User=pi
 RemainAfterExit=yes
-ExecStart=/home/pi/moonraker-env/bin/python /home/pi/moonraker/moonraker/moonraker.py -c ${MOONRAKER_CONFIG} -l ${MOONRAKER_LOG}
+ExecStart=/home/{{ansible_user}}/moonraker-env/bin/python /home/{{ansible_user}}/moonraker/moonraker/moonraker.py -l /home/{{ansible_user}}/klipper_logs/moonraker.log -c /home/{{ansible_user}}/klipper_config/moonraker.conf
 Restart=always
 RestartSec=10

@@ -1,0 +1,20 @@
+#Systemd Klipper Service
+
+[Unit]
+Description=Starts Klipper and provides klippy Unix Domain Socket API
+Documentation=https://www.klipper3d.org/
+After=network.target
+Before=moonraker.service
+Wants=udev.target
+
+[Install]
+Alias=klippy
+WantedBy=multi-user.target
+
+[Service]
+Type=simple
+User=pi
+RemainAfterExit=yes
+ExecStart= /home/{{ansible_user}}/klippy-env/bin/python /home/{{ansible_user}}/klipper/klippy/klippy.py /home/pi/klipper_config/printer.cfg -I /tmp/printer -l /home/pi/klipper_logs/klippy.log -a /tmp/klippy_uds
+Restart=always
+RestartSec=10
