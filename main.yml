@@ -11,6 +11,7 @@
     apt:
       name: "*"
       state: latest
+      update_cache: yes
     become: yes
 
   - name: get klipper dependencies

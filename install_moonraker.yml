@@ -1,9 +1,15 @@
 ---
+  - name: Check if moonraker.service exists
+    stat:
+      path: /etc/systemd/system/moonraker.service
+    register: var_moonrakerservice
+    
   - name: stop moonraker.service
     ansible.builtin.systemd:
       name: moonraker
       state: stopped
     become: yes
+    when: var_moonrakerservice.stat.exists
 
   - name: git checkout moonraker
     ansible.builtin.git:

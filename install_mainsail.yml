@@ -1,9 +1,15 @@
 ---
-  - name: stop service nginx
+  - name: Check if nginx.service exists
+    stat:
+      path: /etc/systemd/system/multi-user.target.wants/nginx.service
+    register: var_nginxservice
+
+  - name: stop service nginx if service exists
     ansible.builtin.service:
       name: nginx
       state: stopped
     become: yes
+    when: var_nginxservice.stat.exists
 
   - name: copy mainsail file
     ansible.builtin.template:

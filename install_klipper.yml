@@ -1,9 +1,15 @@
 ---
-  - name: stop klipper.service
+  - name: Check if klipper.service exists
+    stat:
+      path: /etc/systemd/system/klipper.service
+    register: var_klipperservice
+
+  - name: stop klipper.service if service exists
     ansible.builtin.systemd:
       name: klipper
       state: stopped
     become: yes
+    when: var_klipperservice.stat.exists
 
   - name: git checkout klipper
     ansible.builtin.git:

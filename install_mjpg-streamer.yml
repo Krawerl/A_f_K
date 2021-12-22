@@ -1,10 +1,15 @@
 ---
-  - name: stop webcamd.service
+  - name: Check if webcamd.service exists
+    stat:
+      path: /etc/systemd/system/webcamd.service
+    register: var_webcamdservice
+
+  - name: stop webcamd.service if service exists
     ansible.builtin.systemd:
       name: webcamd
       state: stopped
     become: yes
-    ignore_errors: yes
+    when: var_webcamdservice.stat.exists
 
   - name: rm mjpg-streamer
     ansible.builtin.file:
@@ -16,7 +21,7 @@
       repo: 'https://github.com/jacksonliam/mjpg-streamer.git'
       dest: /home/{{ansible_user}}/mjpg-streamer
       
-  - name: making  mjpg-streamer
+  - name: making mjpg-streamer
     community.general.make:
       chdir: /home/{{ansible_user}}/mjpg-streamer/mjpg-streamer-experimental
            
