@@ -13,6 +13,12 @@
       state: latest
     become: yes
 
+  - name: get klipper dependencies
+    import_tasks: dependencies/klipper.yml
+      
+  - name: installing klipper
+    import_tasks: install_klipper.yml
+
   - name: install kiauh
     import_tasks: install_kiauh.yml
     when: main.KIAUH == true
@@ -23,12 +29,6 @@
   - name: install mjpg-streamer
     import_tasks: install_mjpg-streamer.yml
     when: main.KIAUH == true
-
-  - name: get klipper dependencies
-    import_tasks: dependencies/klipper.yml
-      
-  - name: installing klipper
-    import_tasks: install_klipper.yml
     
   - name: get moonraker dependencies
     import_tasks: dependencies/moonraker.yml
