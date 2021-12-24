@@ -1,0 +1,7 @@
+
+
+#! delegate_to: localhost
+
+# if hostname directory exists
+#   search for klipper directories
+#   

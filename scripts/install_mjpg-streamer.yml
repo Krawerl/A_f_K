@@ -37,7 +37,7 @@
 
   - name: copy index.html
     ansible.builtin.copy:
-      src:  files/mjpg-streamer_config/index.html
+      src:  conf/klipper_default/files/mjpg-streamer_config/index.html
       dest: /home/{{ansible_user}}/mjpg-streamer/www-mjpgstreamer/index.html
       force: no
       
@@ -69,7 +69,7 @@
       
   - name: copy webcamd.service
     ansible.builtin.template:
-      src: files/mjpg-streamer_config/webcamd.service.j2
+      src: conf/klipper_default/files/mjpg-streamer_config/webcamd.service.j2
       dest: /etc/systemd/system/webcamd.service
       force: yes
     become: yes

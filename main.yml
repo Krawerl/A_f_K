@@ -7,6 +7,27 @@
       file: conf/main_conf.yml
       name: main
 
+  - name: making backup from klipper_conf
+    ansible.builtin.copy:
+      src:  /home/{{ansible_user}}/klipper_conf
+      dest: /home/{{ansible_user}}/klipper_conf_{{ansible_date_time.iso8601_basic_short}}
+      remote_src: yes
+      force: yes
+    when: main.BACKUP_CONFIG_REMOTLY == true
+    
+# if ALWAYS_READ_FULL_REMOTE == true
+#   block -> read remote config
+#   block -> overwrite local config
+    
+# if hostname folder does not exist && READ_REMOTE_CONFIG == true
+#   block -> read remote config
+#   if no installation is found
+#     set -> do default
+#     set -> new system
+
+# if hostname folder does not exist && READ_REMOTE_CONFIG == false
+#   set -> only soft update
+
   - name: Update all packages to their latest version
     apt:
       name: "*"
@@ -15,30 +36,35 @@
     become: yes
 
   - name: get klipper dependencies
-    import_tasks: dependencies/klipper.yml
+    import_tasks: scripts/dependencies/klipper.yml
       
   - name: installing klipper
-    import_tasks: install_klipper.yml
+    import_tasks: scripts/install_klipper.yml
 
   - name: install kiauh
-    import_tasks: install_kiauh.yml
+    import_tasks: scripts/install_kiauh.yml
     when: main.KIAUH == true
 
   - name: get mjpg-streamer dependencies
-    import_tasks: dependencies/mjpg-streamer.yml
+    import_tasks: scripts/dependencies/mjpg-streamer.yml
+    when: main.MJPG_STREAMER == true
 
   - name: install mjpg-streamer
-    import_tasks: install_mjpg-streamer.yml
-    when: main.KIAUH == true
+    import_tasks: scripts/install_mjpg-streamer.yml
+    when: main.MJPG_STREAMER == true
     
   - name: get moonraker dependencies
-    import_tasks: dependencies/moonraker.yml
+    import_tasks: scripts/dependencies/moonraker.yml
     
   - name: installing moonraker
-    import_tasks: install_moonraker.yml
+    import_tasks: scripts/install_moonraker.yml
       
   - name: get mainsail dependencies
-    import_tasks: dependencies/mainsail.yml
+    import_tasks: scripts/dependencies/mainsail.yml
     
   - name: installing mainsail
-    import_tasks: install_mainsail.yml
+    import_tasks: scripts/install_mainsail.yml
+
+# if new system == true && READ_REMOTE_CONFIG == true
+#   block -> read remote config
+#   block -> write local config

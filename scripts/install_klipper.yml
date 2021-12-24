@@ -54,7 +54,7 @@
 
   - name: copy klipper.service
     ansible.builtin.template:
-      src: files/klipper_config/klipper.service.j2
+      src: conf/klipper_default/files/klipper_config/klipper.service.j2
       dest: /etc/systemd/system/klipper.service
       force: yes
     become: yes

@@ -38,13 +38,13 @@
   
   - name: copy moonraker.conf (if not exist)
     ansible.builtin.copy:
-      src: files/moonraker_config/moonraker.conf
+      src: conf/klipper_default/files/moonraker_config/moonraker.conf
       dest: /home/{{ansible_user}}/klipper_config/moonraker.conf
       force: no
 
   - name: copy moonraker.service
     ansible.builtin.template:
-      src: files/moonraker_config/moonraker.service.j2
+      src: conf/klipper_default/files/moonraker_config/moonraker.service.j2
       dest: /etc/systemd/system/moonraker.service
       force: yes
     become: yes

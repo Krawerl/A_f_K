@@ -1,0 +1,8 @@
+---
+
+# block - read config
+#   read services from remote - write var_instances 
+#   if read config == true
+#     if remote_config exists
+#       read klipper_config - write to local instances-folders
+#       write var_instances to local config

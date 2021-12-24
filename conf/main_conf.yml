@@ -6,7 +6,14 @@ KIAUH: true
    # if (true):  install / reinstall
 MJPG_STREAMER: true
 
-# Multi Instances - not yet supported!
-   # if (true):  recursive search INSTANCES folder
-   #    (false): standard single instance installation
-MULTI_KLIPPER: false
+# reads remote config and stores if hostname directory
+#   when local config not exists
+READ_REMOTE_CONFIG: true
+#   always reads remote conf an overwrites the local config
+ALWAYS_READ_FULL_REMOTE: false
+#   always reads remote klipper_config and writes it to local klipper_config
+ALWAYS_READ_KLIPPER_CONF: true
+
+# makes a backup of klipper_conf_<timestamp> before doing anything
+BACKUP_CONFIG_REMOTLY: true
+
