@@ -1,3 +1,5 @@
+Project was created to find a purpose to play with ansible.
+Don't think i will continue the work on this project.
 
 **Ansible_for_Klipper**
 
